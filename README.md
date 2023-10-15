@@ -1,6 +1,6 @@
 # Azure IoT Hub<br/>Improved Developer experience
 
-This .NET solution implements a Backend and Console application that can create, run, and update simulated IoT devices registered in Azure IoT Hub. It is designed to decrease the developer experience to work with actual devices.
+This .NET solution implements a Backend and Console applications that can create, run, and update simulated Azure IoT devices registered in Azure IoT Hub. It is designed to decrease the developer experience to work with actual devices.
 
 ## Device Registration
 
