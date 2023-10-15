@@ -1,6 +1,8 @@
 # Azure IoT Hub<br/>Improved Developer experience
 
-This .NET solution implements a `IoTCommander.Backend` and `IoTCommander.Console` applications that can create, run, and update simulated Azure IoT devices registered in Azure IoT Hub. It is designed to decrease the development experience in working with actual devices.
+This .NET solution includes two applications: `IoTCommander.Backend` and `IoTCommander.Console`. These applications allow you to create, run, and update simulated Azure IoT devices that are registered in Azure IoT Hub. The purpose of this solution is to simplify the development process by working with virtual devices instead of physical ones.
+
+What sets this approach apart is that you can run one or multiple simulated devices as tasks within a console application, or as background tasks within the backend. These simulated devices send telemetry data to IoT Hub and can also receive and process direct method calls.
 
 ## Devices
 
