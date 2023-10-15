@@ -83,7 +83,7 @@ private async Task<MethodResponse> DirectMethodCallback(MethodRequest methodRequ
             case "SetProperties":
 ```
 
-## Setting Properties using direct method calls
+## Updating the device state using direct method calls
 
 ```C#
 case "SetProperties":
