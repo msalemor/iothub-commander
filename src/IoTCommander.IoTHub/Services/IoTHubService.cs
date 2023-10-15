@@ -1,17 +1,25 @@
+using System.Configuration;
+using IoTCommander.Common.Services;
 using Microsoft.Azure.Devices;
 
 namespace IoTCommander.IoTHub.Services;
 
 public class IoTHubService
 {
-    public required string RegistryConnStr { get; set; }
-    public required string ServiceConnStr { get; set; }
+    private readonly string registryConnStr;
+    private readonly string serviceConnStr;
+
+    public IoTHubService(AppSettingsService appSettings)
+    {
+        registryConnStr = appSettings.IoTRegistryConnStr;
+        serviceConnStr = appSettings.IoTDeviceConnStr;
+    }
 
     public async Task<Device?> CreateDeviceAsync(string deviceId)
     {
         try
         {
-            using var registryManager = RegistryManager.CreateFromConnectionString(RegistryConnStr);
+            using var registryManager = RegistryManager.CreateFromConnectionString(registryConnStr);
             var device = new Device(deviceId);
             device = await registryManager.AddDeviceAsync(device);
             return device;
@@ -25,7 +33,7 @@ public class IoTHubService
 
     public async Task<IEnumerable<Device>> ListDevicesAsync()
     {
-        using var registryManager = RegistryManager.CreateFromConnectionString(RegistryConnStr);
+        using var registryManager = RegistryManager.CreateFromConnectionString(registryConnStr);
         var devices = await registryManager.GetDevicesAsync(100);
         // var reader = registryManager.CreateQuery("SELECT * FROM devices", 100);
         // while (reader.HasMoreResults)
@@ -41,7 +49,7 @@ public class IoTHubService
 
     public async Task SendCommandAsync(string deviceId, string commandName, string payload)
     {
-        using var serviceClient = ServiceClient.CreateFromConnectionString(ServiceConnStr);
+        using var serviceClient = ServiceClient.CreateFromConnectionString(serviceConnStr);
         var methodInvocation = new CloudToDeviceMethod(commandName) { ResponseTimeout = TimeSpan.FromSeconds(30) };
         methodInvocation.SetPayloadJson(payload);
         var response = await serviceClient.InvokeDeviceMethodAsync(deviceId, methodInvocation);

@@ -10,24 +10,25 @@ namespace IoTCommander.IoTHub.Devices;
 public class SimulatedDevice
 {
     private TimeSpan s_telemetryInterval = TimeSpan.FromSeconds(60);
-    public AppSettingsService Settings = new();
+    private AppSettingsService settings = new();
 
     private readonly IIoTDevice device;
-    public CancellationTokenSource CTS = new();
-    public IoTHubService Service;
-    public SimulatedDevice(IIoTDevice device, IoTHubService service, CancellationTokenSource cts, AppSettingsService settings)
+    private CancellationTokenSource CTS = new();
+    private IoTHubService service;
+
+    public SimulatedDevice(IIoTDevice iotDevice, IoTHubService iotHubService, CancellationTokenSource cts, AppSettingsService appSettings)
     {
-        this.device = device;
-        this.Service = service;
-        this.CTS = cts;
-        this.Settings = settings;
+        device = iotDevice;
+        service = iotHubService;
+        CTS = cts;
+        settings = appSettings;
     }
 
     public async Task RunAsync()
     {
-        await Service.CreateDeviceAsync(device.ID);
+        await service.CreateDeviceAsync(device.ID);
         var transportType = TransportType.Mqtt;
-        var finalConnStr = Settings.IoTDeviceConnStr.Replace("<DeviceId>", device.ID);
+        var finalConnStr = settings.IoTDeviceConnStr.Replace("<DeviceId>", device.ID);
         using var deviceClient = DeviceClient.CreateFromConnectionString(finalConnStr, transportType);
         await deviceClient.SetMethodDefaultHandlerAsync(DirectMethodCallback, null);
         await SendDeviceToCloudMessagesAsync(deviceClient, CTS.Token);

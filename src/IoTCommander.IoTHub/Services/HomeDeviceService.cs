@@ -11,14 +11,16 @@ public class HomeDeviceServices
     {
         devices = new List<IIoTDevice>
         {
-            new WifiLight("Light1", "Light", "Living room"),
-            new WifiLight("Light2", "Light-Left", "Master bedroom"),
-            new WifiLight("Light3", "Light-Right", "Master bedroom"),
-            new WifiTv("Tv1", "Main Tv", "Living room"),
-            new WifiTv("Tv2", "Master bedroom tv", "Master bedroom"),
-            new WifiLock("Lock1", "Entry door lock", "Entrance"),
-            new WifiGarage("Garage-South", "South Garage door", "Garage"),
-            new WifiGarage("Garage-North", "North Garage door", "Garage"),
+            new WifiLight("1000","Pedestal Light","Living Room"),
+            new WifiSwitch("1001","Corner Light","Living Room"),
+            new WifiSwitch("1002","Right Light","Master Bedroom"),
+            new WifiSwitch("1003","Left Light","Master Bedroom"),
+            new WifiSwitch("1004","Office Light","Office"),
+            new WifiThermostat("1005","Florida","Laundry Room"),
+            new WifiThermostat("1006","Maine","Hallway"),
+            new WifiTv("1007","Family TV","Family Room"),
+            new WifiLight("1008","TV Light","Family Room"),
+            new WifiTv("1009","Master TV","Master bedroom"),
         };
     }
 
@@ -29,13 +31,4 @@ public class HomeDeviceServices
             return devices;
         }
     }
-
-    public string GetDevicesJson
-    {
-        get
-        {
-            return JsonSerializer.Serialize(devices.OrderBy(c => c.ID));
-        }
-    }
-
 }
