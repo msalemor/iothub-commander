@@ -12,7 +12,7 @@ public class IoTHubService
     public IoTHubService(AppSettingsService appSettings)
     {
         registryConnStr = appSettings.IoTRegistryConnStr;
-        serviceConnStr = appSettings.IoTDeviceConnStr;
+        serviceConnStr = appSettings.IoTServiceConnStr;
     }
 
     public async Task<Device?> CreateDeviceAsync(string deviceId)
@@ -47,7 +47,7 @@ public class IoTHubService
         return devices;
     }
 
-    public async Task SendCommandAsync(string deviceId, string commandName, string payload)
+    public async Task<string> SendCommandAsync(string deviceId, string commandName, string payload)
     {
         using var serviceClient = ServiceClient.CreateFromConnectionString(serviceConnStr);
         var methodInvocation = new CloudToDeviceMethod(commandName) { ResponseTimeout = TimeSpan.FromSeconds(30) };
@@ -56,9 +56,8 @@ public class IoTHubService
         if (response.Status == 200)
         {
             var json = response.GetPayloadAsJson();
-            Console.WriteLine(json);
+            return json;
         }
-        //var responsePayload = Encoding.UTF8.GetString(response.GetPayloadAsBytes());
-        // Handle the response payload here
+        return "";
     }
 }

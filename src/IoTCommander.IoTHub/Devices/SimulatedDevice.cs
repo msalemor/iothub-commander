@@ -40,23 +40,6 @@ public class SimulatedDevice
         byte[] bytes = null!;
         switch (methodRequest.Name)
         {
-            case "SetTelemetryInterval":
-                try
-                {
-                    int telemetryIntervalSeconds = JsonSerializer.Deserialize<int>(methodRequest.DataAsJson);
-                    s_telemetryInterval = TimeSpan.FromSeconds(telemetryIntervalSeconds);
-                    Console.WriteLine($"Setting the telemetry interval to {s_telemetryInterval}.");
-                    return await Task.FromResult(new MethodResponse(200));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Failed ot parse the payload for direct method {methodRequest.Name} due to {ex}");
-                    break;
-                }
-            case "GetStatus":
-                messageBody = JsonSerializer.Serialize(device);
-                bytes = Encoding.ASCII.GetBytes(messageBody);
-                return await Task.FromResult(new MethodResponse(bytes, 200));
             case "SetProperties":
                 try
                 {
@@ -77,9 +60,6 @@ public class SimulatedDevice
                     messageBody = JsonSerializer.Serialize(device);
                     bytes = Encoding.ASCII.GetBytes(messageBody);
                     return await Task.FromResult(new MethodResponse(bytes, 200));
-                    //await SendMessageAsync(deviceClient, device, ct);
-                    //return await Task.FromResult(new MethodResponse(200));
-
                 }
                 catch (Exception ex)
                 {
@@ -87,32 +67,35 @@ public class SimulatedDevice
                     Console.WriteLine($"Failed ot parse the payload for direct method {methodRequest.Name} due to {ex}");
                     break;
                 }
+            case "SetTelemetryInterval":
+                try
+                {
+                    int telemetryIntervalSeconds = JsonSerializer.Deserialize<int>(methodRequest.DataAsJson);
+                    s_telemetryInterval = TimeSpan.FromSeconds(telemetryIntervalSeconds);
+                    Console.WriteLine($"Setting the telemetry interval to {s_telemetryInterval}.");
+                    return await Task.FromResult(new MethodResponse(200));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Failed ot parse the payload for direct method {methodRequest.Name} due to {ex}");
+                    break;
+                }
+            case "GetStatus":
+                messageBody = JsonSerializer.Serialize(device);
+                bytes = Encoding.ASCII.GetBytes(messageBody);
+                return await Task.FromResult(new MethodResponse(bytes, 200));
         }
 
         return await Task.FromResult(new MethodResponse(400));
     }
 
-    // Async method to send simulated telemetry
     private async Task SendDeviceToCloudMessagesAsync(DeviceClient deviceClient, CancellationToken ct)
     {
-        // Initial telemetry values
-        double minTemperature = 20;
-        double minHumidity = 60;
-        var rand = new Random();
-
         try
         {
             while (!ct.IsCancellationRequested)
             {
-                double currentTemperature = minTemperature + rand.NextDouble() * 15;
-                double currentHumidity = minHumidity + rand.NextDouble() * 20;
-
-                // Add a custom application property to the message.
-                // An IoT hub can filter on these properties without access to the message body.
-                //message.Properties.Add("temperatureAlert", (currentTemperature > 30) ? "true" : "false");
-                // Send the telemetry message
                 await SendMessageAsync(deviceClient, device, ct);
-
                 await Task.Delay(s_telemetryInterval, ct);
             }
         }
@@ -128,6 +111,8 @@ public class SimulatedDevice
             ContentType = "application/json",
             ContentEncoding = "utf-8",
         };
+
+        // TODO: You could add message properties
         // message.Properties.Add("kind", device.Kind);
         // message.Properties.Add("location", device.Location);
         // foreach (var prop in device.Settings.Keys)
