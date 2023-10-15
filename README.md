@@ -4,6 +4,8 @@ This .NET solution includes two applications: `IoTCommander.Backend` and `IoTCom
 
 What sets this approach apart is that you can run one or multiple simulated devices as tasks within a console application, or as background tasks within the backend. These simulated devices send telemetry data to IoT Hub and can also receive and process direct method calls.
 
+The idea is that once you work out the issues in simulated devices, you should be able to swap them with actual devices.
+
 ## Devices
 
 ## Device Interface - `IIoTDevice`
