@@ -8,7 +8,23 @@ The idea is that once you work out the issues in simulated devices, you should b
 
 ## Devices
 
-## Device Interface - `IIoTDevice`
+## Device Interface - `IIoTDevice.cs`
+
+```C#
+public interface IIoTDevice
+{
+    [JsonPropertyName("id")]
+    string ID { get; set; }
+    [JsonPropertyName("kind")]
+    string Kind { get; set; }
+    [JsonPropertyName("name")]
+    string Name { get; set; }
+    [JsonPropertyName("location")]
+    string Location { get; set; }
+    [JsonPropertyName("properties")]
+    Dictionary<string, object> Properties { get; set; }
+}
+```
 
 ## `SimilatedDevice.cs` - Class
 
